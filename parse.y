@@ -1,13 +1,12 @@
-/* Simple Expression Evaluator */
-
-/* parse.y
- *
- * Grammer rules for bison.
- * Includes the lexical analyzer routine yylex().
+/* @Title   parse.y - Bison File
+ * @class   CSCE531
+ * @author  Christian Merchant
+ * @date    03-04-15
  */
 
 
 %{
+#include "defs.h"
 #include <ctype.h>
 #define YYDEBUG 1
 
@@ -59,27 +58,6 @@ factor
     ;
 
 %%
-
-int yylex()
-{
-    int c;
-
-    /* read past whitespace first */
-    while ((c = getchar()) == ' ' || c == '\t');
-
-    if (isalpha(c))            /* if letter (variable name) */
-    {
-        yylval = toupper(c);   /* case insensitive */
-        return VAR;
-    }
-    if (isdigit(c))
-    {
-        ungetc(c, stdin);
-        scanf("%d", &yylval);
-        return CONST;
-    }
-    return c;
-}
 
 yyerror(char *s)
 {
