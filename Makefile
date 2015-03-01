@@ -1,6 +1,6 @@
-#
-#	makefile for the Simple Expression Evaluator
-#
+# Title: Makefile - simple expression eval
+# Christian Merchant
+# 03-04-15
 #
 
 CC = gcc

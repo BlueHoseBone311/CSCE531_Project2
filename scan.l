@@ -6,12 +6,28 @@
 */
 
 %{
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "defs.h"
 #include "y.tab.h"
 %}
-
+int_const   [0-9]+
+letter      
 
 %%
+[ \t]			/*consume whitespace*/
+
+{int_const}		{
+                    yylval.y_int = atol(yytext);
+                    return CONST; 
+                }
+
+{letter}        {
+                    
+                    return VAR; 
+                }                
 %%
 int yylex()
 {

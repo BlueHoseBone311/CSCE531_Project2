@@ -4,3 +4,8 @@
 * @Project Bison Project
 * @date    03-04-15
 */
+#include "defs.h"
+
+void make_binop_node(TN tnode1, TN tnode2, int tag);
+void make_const_node(long val);
+void 
