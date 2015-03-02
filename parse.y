@@ -43,15 +43,23 @@ assign
     ;
 
 expr
-    : expr '+' term		    { $$ = make_binop_node($1, $3,BIN_PLUS); }
-    | expr '-' term		    { $$ = make_binop_node($1, $3, BIN_MINUS); }
+    : expr '+' term		    {$$ = make_binop_node($1, $3,BIN_PLUS); }
+    | expr '-' term		    {$$ = make_binop_node($1, $3, BIN_MINUS); }
+    |'-' expr               {$$ = make_unop_node($2,UN_MINUS);}
+    |'+' expr               {$$ = make_unop_node($2,UN_PLUS);}
+    |'++' expr              {$$ = make_unop_node($2,INC);}
+    |'--' expr              {$$ = make_unop_node($2,DEC);}
     | term
     ;
 
 term
-    : term '*' factor		{ $$ = make_binop_node($1, $3, MULT);}
-    | term '/' factor		{ $$ = make_binop_node($1, $3, DIV);}
-    | term '%' factor		{ $$ = make_binop_node($1, $3, MOD);}
+    : term '*' factor		{$$ = make_binop_node($1, $3, MULT);}
+    | term '/' factor		{$$ = make_binop_node($1, $3, DIV);}
+    | term '%' factor		{$$ = make_binop_node($1, $3, MOD);}
+    |'-' term               {$$ = make_unop_node($2,UN_MINUS);}
+    |'+' term               {$$ = make_unop_node($2,UN_PLUS);}
+    |'++' term              {$$ = make_unop_node($2,INC);}
+    |'--' term              {$$ = make_unop_node($2,DEC);}
     | factor
     ;
 
