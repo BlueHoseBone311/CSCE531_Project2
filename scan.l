@@ -13,12 +13,15 @@
 #include "tree.h"
 #include "y.tab.h"
 %}
+whtspc	    [ \t]+ 
 int_const   [0-9]+
-letter      [a-z]+
-assignment  
+letter      [a-zA-Z]
+assignment  "="
+operator    "+"|"-"|"*"|"/"
+  
 
 %%
-[ \t]			/*consume whitespace*/
+{whtspc}			/*consume whitespace*/
 
 {int_const}	{
                     yylval.y_int = atol(yytext);
@@ -26,9 +29,16 @@ assignment
                 }
 
 {letter}        {
-                    
+                    yylval.y_int = toupper(atoi(yytext)); 
                     return VAR; 
-                }                
+                } 
+
+{assignment}	{   	
+		   return  	
+		} 
+{operator}	{
+		   return 
+		}             
 %%
 int yylex()
 {

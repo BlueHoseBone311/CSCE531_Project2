@@ -38,7 +38,7 @@ eval
     ;
 
 line
-    : assign '\n'		    { printf("%4d\n", $1); }
+    : assign '\n'		    { printf("%d\n", $1); }
     ;
 
 assign
