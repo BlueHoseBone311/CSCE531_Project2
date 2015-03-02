@@ -20,6 +20,10 @@ void set_val(int, int);
 }
 %type <y_tree> expr term factor
 %token <y_int> CONST VAR
+%left '+''-'
+%left '*''/'
+%left UMINUS
+%nonassoc 
 
 %%
 
@@ -34,7 +38,7 @@ eval
     ;
 
 line
-    : assign '\n'		    { printf("%d\n", $1); }
+    : assign '\n'		    { printf("%4d\n", $1); }
     ;
 
 assign
@@ -43,12 +47,12 @@ assign
     ;
 
 expr
-    : expr '+' term		    {$$ = make_binop_node($1, $3,BIN_PLUS); }
-    | expr '-' term		    {$$ = make_binop_node($1, $3, BIN_MINUS); }
-    |'-' expr               {$$ = make_unop_node($2,UN_MINUS);}
-    |'+' expr               {$$ = make_unop_node($2,UN_PLUS);}
+    : expr '+' term	    {$$ = make_binop_node($1, $3,BIN_PLUS); }
+    | expr '-' term	    {$$ = make_binop_node($1, $3, BIN_MINUS); }
+    |'-' expr %prec UMINUS  {$$ = make_unop_node($2,UN_MINUS);}
+    |'+' expr %prec UPLUS   {$$ = make_unop_node($2,UN_PLUS);}
     |'++' expr              {$$ = make_unop_node($2,INC);}
-    |'--' expr              {$$ = make_unop_node($2,DEC);}
+    |'--' expr %prec
     | term
     ;
 

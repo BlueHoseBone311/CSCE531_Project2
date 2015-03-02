@@ -10,16 +10,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "defs.h"
+#include "tree.h"
 #include "y.tab.h"
 %}
 int_const   [0-9]+
-letter      
+letter      [a-z]+
+assignment  
 
 %%
 [ \t]			/*consume whitespace*/
 
-{int_const}		{
+{int_const}	{
                     yylval.y_int = atol(yytext);
                     return CONST; 
                 }

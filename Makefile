@@ -23,11 +23,14 @@ parse.o: parse.c
 lex.yy.o: lex.yy.c
 	$(CC) $(CFLAGS) lex.yy.c 
 
-y.tab.h parse.c: parse.y defs.h
+tree.o: tree.c
+	$(CC) $(CFLAGS) tree.c
+
+y.tab.h parse.c: parse.y tree.h
 	$(YACC) -y -d -t -v parse.y
 	mv y.tab.c parse.c
 
-lex.yy.c: scan.l y.tab.h defs.h
+lex.yy.c: scan.l y.tab.h tree.h
 	$(LEX) scan.l 
 
 clean:
