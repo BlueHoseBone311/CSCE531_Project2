@@ -26,12 +26,12 @@ paren       [()]
 {whtspc}			/*consume whitespace*/
 
 {int_const}	   {
-                    yylval.y_int = atol(yytext);
+                    yylval = atol(yytext);
                     return CONST; 
                    }
 
 {letter}        {
-                   yylval.y_int = toupper(yytext[0]); 
+                   yylval = (long)toupper(yytext[0]); 
                    return VAR; 
                 } 
 
@@ -43,6 +43,8 @@ paren       [()]
 		    }  
 {paren}         {
                     return yytext[0];
-                }  
+                } 
+"+""+"		{return 1;} 
+"-""-"		{return 1;}
 .|\n		return yytext[0];                          
 %%
