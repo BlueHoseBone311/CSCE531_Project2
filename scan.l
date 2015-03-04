@@ -9,54 +9,40 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <string.h>
-#include "tree.h"
 #include "y.tab.h"
 %}
 whtspc	    [ \t]+ 
 int_const   [0-9]+
 letter      [a-zA-Z]
 assignment  "="
-operator    "+"|"-"|"*"|"/"
-  
+operator    [-+*/%]
+paren       [()]
+ 
+
 
 %%
 {whtspc}			/*consume whitespace*/
 
-{int_const}	{
+{int_const}	   {
                     yylval.y_int = atol(yytext);
                     return CONST; 
-                }
+                   }
 
 {letter}        {
-                    yylval.y_int = toupper(atoi(yytext)); 
-                    return VAR; 
+                   yylval.y_int = toupper(yytext[0]); 
+                   return VAR; 
                 } 
 
-{assignment}	{   	
-		   return  	
-		} 
-{operator}	{
-		   return 
-		}             
+{assignment}	 {   
+                   return yytext[0];  	
+		 } 
+{operator}	    {
+		       return yytext[0];
+		    }  
+{paren}         {
+                    return yytext[0];
+                }  
+.|\n		return yytext[0];                          
 %%
-int yylex()
-{
-    int c;
-
-    /* read past whitespace first */
-    while ((c = getchar()) == ' ' || c == '\t');
-
-    if (isalpha(c))            /* if letter (variable name) */
-    {
-        yylval = toupper(c);   /* case insensitive */
-        return VAR;
-    }
-    if (isdigit(c))
-    {
-        ungetc(c, stdin);
-        scanf("%d", &yylval);
-        return CONST;
-    }
-    return c;
-}
