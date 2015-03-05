@@ -16,9 +16,7 @@
 whtspc	    [ \t]+ 
 int_const   [0-9]+
 letter      [a-zA-Z]
-assignment  "="
-operator    [-+*/%]
-paren       [()]
+synerr      [*][*]+|[/][/]+|[-][-]+|[+][+]+|[-]+[*]+|[*]+[-]+|[/]+[*]+|[*]+[/]+
  
 
 
@@ -34,17 +32,8 @@ paren       [()]
                    yylval = (long)toupper(yytext[0]); 
                    return VAR; 
                 } 
-
-{assignment}	 {   
-                   return yytext[0];  	
-		 } 
-{operator}	    {
-		       return yytext[0];
-		    }  
-{paren}         {
-                    return yytext[0];
-                } 
-"+""+"		{return 1;} 
-"-""-"		{return 1;}
-.|\n		return yytext[0];                          
+{synerr}        {return 1;}                
+.|\n              {return yytext[0];} 
+ 
+              
 %%

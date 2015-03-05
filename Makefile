@@ -14,24 +14,12 @@ OBJECTS = parse.o main.o lex.yy.o
 see: $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o see
 
-main.o: main.c
-	$(CC) $(CFLAGS)	main.c
-
-parse.o: parse.c
-	$(CC) $(CFLAGS) parse.c
-
-lex.yy.o: lex.yy.c
-	$(CC) $(CFLAGS) lex.yy.c 
-
-tree.o: tree.c
-	$(CC) $(CFLAGS) tree.c
-
-y.tab.h parse.c: parse.y tree.h
+y.tab.h parse.c: parse.y 
 	$(YACC) -y -d -t -v parse.y
 	mv y.tab.c parse.c
 
-lex.yy.c: scan.l y.tab.h tree.h
+lex.yy.c: scan.l y.tab.h 
 	$(LEX) scan.l 
 
 clean:
-	-rm *.o lex.yy.c parse.c y.output see
+	-rm *.o lex.yy.c parse.c y.tab.h y.output see

@@ -36,8 +36,8 @@ line
 
 assign
     : VAR '=' expr		{ set_val($1, $3);  $$ = $3; expr_count++;}
-    | expr			{$$=$1; expr_count++;}
-    | '\n'			{yyerror("syntax error");return 1;}
+    | expr			   {$$=$1; expr_count++;}
+    | '\n'			   {yyerror("syntax error");return 1;}
     ;
 
 expr
@@ -58,7 +58,7 @@ factor
     | CONST
     | VAR			{ $$ = get_val($1); }
     | '-' factor    {$$ = -$2;}
-    | '+' factor	{$$ = $2;}
+    | '+' factor	{$$ = $2;}   
     ;
 
 %%
