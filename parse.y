@@ -2,19 +2,23 @@
  * @author  Christian Merchant
  * @class   CSCE531
  * @Project Bison Project
- * @date    03-04-15
+ * @date    03-06-15
  */
 
 
 %{
 #include <ctype.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "defs.h"
 #include "eval.h"
 #include "tree.h"
 #define YYDEBUG 1
 
 int  get_val(int);
 void set_val(int, int);
-static int expr_count =1; 
+int expr_count =1; 
+int cache_flag = FALSE;
 %}
 %union {
     long y_int; 
@@ -41,8 +45,8 @@ line
     ;
 
 assign
-    : VAR '=' expr		{ set_val($1, $3);  $$ = $3; expr_count++;}
-    | expr			   {$$=$1; expr_count++;}
+    : VAR '=' expr		{set_val($1, $3); clear_vals();  $$ = eval($3); expr_count++;}
+    | expr			   {$$ = eval($1); expr_count++;}
     | '\n'			   {yyerror("syntax error");return 1;}
     ;
 
@@ -65,7 +69,7 @@ factor
     | VAR			{ $$ = make_var_node(get_val($1)); }
     | '-' factor    {$$ = make_unop_node($2,MINUS);}
     | '+' factor	{$$ = make_unop_node($2, PLUS);}  
-    | '#' CONST     {$$= get_expression($2);} 
+    | '#' CONST     {$$= get_expression($2); cache_flag = TRUE; cache_val = $1;} 
     ;
 
 %%
@@ -81,15 +85,24 @@ print_welcome()
     printf("Enter one expression per line, end with ^D\n\n");
 }
 
-static int val_tab[26];
+static int var_tab[26];
 
 int get_val(int v)
 {
-    return val_tab[v - 'A'];
+    return var_tab[v - 'A'];
 }
 
 void set_val(int v, int val)
 {
-    val_tab[v - 'A'] = val;
+    var_tab[v - 'A'] = val;
 }
+
+void clear_vals()
+{
+    int i; 
+    for (i=0; i<tab_size; i++)
+    {
+        mem_cache[i] = 0; 
+    }   
+} 
 

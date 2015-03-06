@@ -1,6 +1,6 @@
 # Title: Makefile - simple expression eval
 # Christian Merchant
-# 03-04-15
+# 03-06-15
 #
 
 CC = gcc
@@ -14,7 +14,7 @@ OBJECTS = parse.o main.o lex.yy.o
 see: $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o see
 
-y.tab.h parse.c: parse.y 
+y.tab.h parse.c: parse.y tree.h eval.h defs.h
 	$(YACC) -y -d -t -v parse.y
 	mv y.tab.c parse.c
 

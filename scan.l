@@ -2,7 +2,7 @@
 * @author  Christian Merchant
 * @class   CSCE531
 * @Project Bison Project
-* @date    03-04-15
+* @date    03-06-15
 */
 
 %{
@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include "defs.h"
 #include "eval.h"
 #include "tree.h"
 #include "y.tab.h"

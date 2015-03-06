@@ -1,3 +1,11 @@
-#include tree.h
+/* @Title   eval.h - Tree evaluation functions, table functions ()
+ * @author  Christian Merchant
+ * @class   CSCE531
+ * @Project Bison Project
+ * @date    03-06-15
+ */
+
+void init_tabs(); 
 long eval(TN node); 
-long lookup(TN tnode); 
+void chk_or_resize(); 
+

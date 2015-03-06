@@ -1,72 +1,84 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include "tree.h"
+#include "defs.h"
+#include "eval.h"
+
+void init_tabs()
+{
+	h_size = 0;
+    hash_tab = NULL;
+    resize(INITIAL_HASH_SIZE);
+	tab_size = 10; 
+	expr_tab = NULL; 
+	mem_cache = NULL: 
+	expr_tab = (TN *) malloc(tab_size * sizeof(TN));
+	mem_cache = (long *) malloc(tab_size * sizeof(long))
+}
 long eval (TN node)
 {
-    Expr_Tab[expr_count] = node;
-    calc = lookup(node);
+    chk_or_resize(); 
+    expr_tab[expr_count] = node;
+    long calc = 0; 
     
-    if (calc == 0)
+    if (cache_flag == FALSE || cache_val == 0 && node != NULL)
     {
-	if (node->u.tag == UN_OP)
-	{
-		switch(node->u.unop.op)
+		if (node->u.tag == UN_OP)
 		{
-			case MINUS: calc = -eval(node->u.unop.operand); break;
-			case PLUS: calc = eval(node->u.unop.operand); break;
-			default: yyerror("error: bad node %d\n", node->u.tag);
+			switch(node->u.unop.op)
+			{
+				case MINUS: calc = -eval(node->u.unop.operand); break;
+				case PLUS: calc = eval(node->u.unop.operand); break;
+				default: yyerror("error: bad node %d\n", node->u.tag);
+			}
 		}
-	}
 
-	else if (node->u.tag == BIN_OP)
-	{
-		switch(node->u.binop.tp)
+		else if (node->u.tag == BIN_OP)
 		{
-			case MULT: calc = eval(node->u.binop.left_operand) * eval(node->u.binop.right_operand); break;
-			case DIV: calc = eval(node->u.binop.left_operand) / eval(node->u.binop.right_operand); break;
-			case ADD: calc = eval(node->u.binop.left_operand) + eval(node->u.binop.right_operand); break;
-			case SUB: calc = eval(node->u.binop.left_operand) - eval(node->u.binop.right_operand); break;
-			case MOD: calc = eval(node->u.binop.left_operand) % eval(node->u.binop.right_operand); break;
-			default: yyerror("error: bad node %d\n", node->u.tag);
+			switch(node->u.binop.tp)
+			{
+				case MULT: calc = eval(node->u.binop.left_operand) * eval(node->u.binop.right_operand); break;
+				case DIV: calc = eval(node->u.binop.left_operand) / eval(node->u.binop.right_operand); break;
+				case ADD: calc = eval(node->u.binop.left_operand) + eval(node->u.binop.right_operand); break;
+				case SUB: calc = eval(node->u.binop.left_operand) - eval(node->u.binop.right_operand); break;
+				case MOD: calc = eval(node->u.binop.left_operand) % eval(node->u.binop.right_operand); break;
+				default: yyerror("error: bad node %d\n", node->u.tag);
+			}
 		}
-	}
 
-	else if (node->u.tag == C) //constant case
-	{
-		calc = node->u.int_const;
-	}
-	else //variable case
-	{
-		calc = get_val(node->u.var); 
-	}
+		else if (node->u.tag == C) //constant case
+		{
+			calc = node->u.int_const;
+		}
+		else //variable case
+		{
+			calc = get_val(node->u.var); 
+		}
 	
     }
-
-    if (expr_count>=memcache_size)
+    else if (cache_flag == TRUE && cache_val != 0 && node != NULL)
     {
-	int new_size = expr_count*2; 
-	mem_cache = (long *) realloc(mem_cache, new_size*sizeof(long));
-	free(mem_cache); 
+    	calc = mem_cache[cache_val]; 
     }
 
     mem_cache[expr_count] = calc; 
+
     return calc; 
 }
 
-long lookup(TN tnode)
+void chk_or_resize()
 {
-        long val = 0; 
-	for (i=0; i<= exprtab_size; i++)
-	{
-		if (tnode == expr_tab[i] && i<memcache_size)
-		{
-			val = mem_cache[i];
-  			break; 
-		}
-		
-	}
-	return val; 	
-}
-void resize(int size)
-{
-	
+	if (expr_count>=tab_size)
+    {
+		int new_size = expr_count*2; 
+		expr_tab = (TN *) realloc(expr_tab, new_size*sizeof(TN));
+		mem_cache = (long *) realloc (mem_cache, new_size*sizeof(long));
+		free(expr_tab); 
+		free(mem_cache); 
+    }	
+}   
+
+
 
 
 
