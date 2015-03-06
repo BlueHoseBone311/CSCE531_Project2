@@ -8,15 +8,20 @@
 
 %{
 #include <ctype.h>
+#include <tree.h>
 #define YYDEBUG 1
 
 int  get_val(int);
 void set_val(int, int);
 static int expr_count =1; 
 %}
-
-%token CONST
-%token VAR
+%union {
+    long y_int; 
+    TN y_tree; 
+}
+%type <y_tree> expr term factor 
+%type <y_int> assign
+%token <y_int> CONST VAR 
 
 %%
  
@@ -41,24 +46,25 @@ assign
     ;
 
 expr
-    : expr '+' term		{ $$ = $1 + $3; }
-    | expr '-' term		{ $$ = $1 - $3; }
+    : expr '+' term		{ $$ = make_binop_node($1, $3, ADD); }
+    | expr '-' term		{ $$ = make_binop_node($1,$3,SUB); }
     | term
     ;
 
 term
-    : term '*' factor		{ $$ = $1 * $3; }
-    | term '/' factor		{ $$ = $1 / $3; }
-    | term '%' factor		{ $$ = $1 % $3; }
+    : term '*' factor		{ $$ = $$ = make_binop_node($1,$3,MULT); }
+    | term '/' factor		{ $$ = $$ = make_binop_node($1,$3,DIV); }
+    | term '%' factor		{ $$ = $$ = make_binop_node($1,$3,MOD); }
     | factor
     ;
 
 factor
-    : '(' expr ')'		{ $$ = $2; }
-    | CONST
-    | VAR			{ $$ = get_val($1); }
-    | '-' factor    {$$ = -$2;}
-    | '+' factor	{$$ = $2;}   
+    : '(' expr ')'		{$$ = $2;}
+    | CONST         {$$ = make_const_node($1);}
+    | VAR			{ $$ = make_var_node(get_val($1)); }
+    | '-' factor    {$$ = make_unop_node($2,MINUS);}
+    | '+' factor	{$$ = make_unop_node($2, PLUS);}  
+    | '#' CONST     {$$= get_expression($2);} 
     ;
 
 %%
