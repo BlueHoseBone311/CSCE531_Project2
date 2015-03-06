@@ -15,15 +15,20 @@
 #include "tree.h"
 #define YYDEBUG 1
 
-check_range(long); 
+void check_range(long); 
+void check_error(TN node);
 void set_val(int, int);
+
 int expr_count =1; 
 int cache_flag = FALSE;
 %}
-%union {
+
+%union 
+{
     long y_int; 
     TN y_tree; 
 }
+
 %type <y_tree> expr term factor 
 %type <y_int> assign
 %token <y_int> CONST VAR 
@@ -45,8 +50,8 @@ line
     ;
 
 assign
-    : VAR '=' expr		{set_val($1, $3); clear_vals();  $$ = eval($3); expr_count++;}
-    | expr			   {$$ = eval($1); expr_count++;}
+    : VAR '=' expr		{check_error ($3); set_val($1, $3); clear_vals();  $$ = eval($3); expr_count++;}
+    | expr			   {check_error($3); $$ = eval($1); expr_count++;}
     | '\n'			   {yyerror("syntax error");return 1;}
     ;
 
@@ -106,12 +111,20 @@ void clear_vals()
         mem_cache[i] = 0; 
     }   
 } 
-check_range(long value)
+void check_range(long value)
 {
     if (value > expr_count)
     {
         yyerror("Index %d is out of range", value);
         return 1; 
     }    
+}
+void check_error(TN node)
+{
+    if (node == NULL)
+    {
+        yyerror("Node not found"); 
+        return 1; 
+    }     
 }
 

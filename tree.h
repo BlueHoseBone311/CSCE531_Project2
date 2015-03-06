@@ -29,7 +29,7 @@ typedef struct tn{
 }TREENODE, *TN; 
 
 //Table Declarations
-TN expr_tab; 
+TN *expr_tab; 
 
 //Tree Methods
 TN make_binop_node(TN node1, TN node2, int tagtype);

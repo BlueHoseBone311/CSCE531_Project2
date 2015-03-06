@@ -20,4 +20,3 @@ extern int cache_val;
 //methods for getting value from var_tab and resizing expression array and mem_cache array
 void clear_vals();  
 int get_val(int v); 
-yyerror(char *s);

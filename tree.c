@@ -11,7 +11,7 @@
 
 TN make_binop_node(TN node1, TN node2, int tagtype)
 {
-	TN node = malloc(sizeof(TREENODE));
+	TN node = (TN) malloc(sizeof(TREENODE));
 	node->tag = BIN_OP;
 
 	if (!node)
@@ -26,7 +26,7 @@ TN make_binop_node(TN node1, TN node2, int tagtype)
 }
 TN make_unop_node(TN node1, int tagtype)
 {
-	TN node = malloc(sizeof(TREENODE));
+	TN node = (TN) malloc(sizeof(TREENODE));
 	node->tag = UN_OP; 
 
 	if (!node)
@@ -41,7 +41,7 @@ TN make_unop_node(TN node1, int tagtype)
 
 TN make_const_node(long val)
 {
-	TN node = malloc(sizeof(TREENODE));
+	TN node = (TN) malloc(sizeof(TREENODE));
 	node->tag = C; 
 	if (!node)
 	{
@@ -54,7 +54,7 @@ TN make_const_node(long val)
 
 TN make_var_node(char variable)
 {
-	TN node = malloc(sizeof(TREENODE));
+	TN node = (TN) malloc(sizeof(TREENODE));
 	node->tag = V; 
 	if (!node)
 	{
