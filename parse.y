@@ -15,7 +15,7 @@
 #include "tree.h"
 #define YYDEBUG 1
 
-int  get_val(int);
+check_range(long); 
 void set_val(int, int);
 int expr_count =1; 
 int cache_flag = FALSE;
@@ -69,7 +69,8 @@ factor
     | VAR			{ $$ = make_var_node(get_val($1)); }
     | '-' factor    {$$ = make_unop_node($2,MINUS);}
     | '+' factor	{$$ = make_unop_node($2, PLUS);}  
-    | '#' CONST     {$$= get_expression($2); cache_flag = TRUE; cache_val = $1;} 
+    | '#' CONST     {check_range ($2); $$= get_expression($2); cache_flag = TRUE; cache_val = $2;} 
+    | '#' VAR       {yyerror("syntax error"); return 1;}
     ;
 
 %%
@@ -105,4 +106,12 @@ void clear_vals()
         mem_cache[i] = 0; 
     }   
 } 
+check_range(long value)
+{
+    if (value > expr_count)
+    {
+        yyerror("Index %d is out of range", value);
+        return 1; 
+    }    
+}
 

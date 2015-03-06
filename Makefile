@@ -18,7 +18,7 @@ y.tab.h parse.c: parse.y tree.h eval.h defs.h
 	$(YACC) -y -d -t -v parse.y
 	mv y.tab.c parse.c
 
-lex.yy.c: scan.l tree.h y.tab.h 
+lex.yy.c: scan.l tree.h eval.h defs.h y.tab.h 
 	$(LEX) scan.l 
 
 clean:

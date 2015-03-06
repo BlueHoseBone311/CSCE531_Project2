@@ -31,9 +31,6 @@ typedef struct tn{
 //Table Declarations
 TN expr_tab; 
 
-
-
-
 //Tree Methods
 TN make_binop_node(TN node1, TN node2, int tagtype);
 TN make_unop_node(TN node1, int tagtype); 

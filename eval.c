@@ -13,7 +13,7 @@ void init_tabs()
 	expr_tab = NULL; 
 	mem_cache = NULL: 
 	expr_tab = (TN *) malloc(tab_size * sizeof(TN));
-	mem_cache = (long *) malloc(tab_size * sizeof(long))
+	mem_cache = (long *) malloc(tab_size * sizeof(long));
 }
 long eval (TN node)
 {
@@ -56,10 +56,16 @@ long eval (TN node)
 		}
 	
     }
-    else if (cache_flag == TRUE && cache_val != 0 && node != NULL)
+    else if(cache_flag == TRUE && cache_val != 0 && node != NULL)
     {
-    	calc = mem_cache[cache_val]; 
+    	calc = mem_cache[cache_val];
+    	cache_flag = FALSE; 
+    	cache_val = 0;  
     }
+    else
+    {
+
+    }	
 
     mem_cache[expr_count] = calc; 
 

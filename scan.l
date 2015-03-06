@@ -27,12 +27,12 @@ synerr      [*][*]+|[/][/]+|[-][-]+|[+][+]+|[-]+[*]+|[*]+[-]+|[/]+[*]+|[*]+[/]+
 {whtspc}			/*consume whitespace*/
 
 {int_const}	   {
-                    yylval = atol(yytext);
+                    yylval.y_int = atol(yytext);
                     return CONST; 
                    }
 
 {letter}        {
-                   yylval = (long)toupper(yytext[0]); 
+                   yylval.y_int = (long)toupper(yytext[0]); 
                    return VAR; 
                 } 
 {synerr}        {return 1;}                
