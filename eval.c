@@ -44,7 +44,7 @@ long eval (TN node)
 				case ADD: calc = eval(node->u.binop.left_operand) + eval(node->u.binop.right_operand); break;
 				case SUB: calc = eval(node->u.binop.left_operand) - eval(node->u.binop.right_operand); break;
 				case MOD: calc = eval(node->u.binop.left_operand) % eval(node->u.binop.right_operand); break;
-				default: fprintf(sderr, "error: bad node");
+				default: fprintf(stderr, "error: bad node");
 			}
 		}
 

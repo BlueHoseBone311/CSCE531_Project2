@@ -4,7 +4,8 @@
  * @Project Bison Project
  * @date    03-06-15
  */
-
+#ifndef _TREE_H_
+#define _TREE_H_
 
 //Tree node structures and enumerations 
 typedef enum {UN_OP, BIN_OP, C, V}tagtp; 
@@ -37,3 +38,5 @@ TN make_unop_node(TN node1, int tagtype);
 TN make_const_node(long val);
 TN make_var_node(char var);
 TN get_expression(int index); 
+
+#endif 

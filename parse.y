@@ -15,12 +15,13 @@
 #include "tree.h"
 #define YYDEBUG 1
 
-void check_range(long); 
-void check_error(TN node);
-void set_val(int, int);
+int check_range(long value); 
+int check_error(TN node);
+void set_val(long, long);
 
-int expr_count =1; 
+long expr_count =1; 
 int cache_flag = FALSE;
+static long value = 0; 
 %}
 
 %union 
@@ -41,17 +42,17 @@ session
     ;
 
 eval
-    : eval line			{printf("%4d: ",expr_count);}
-    | /* empty */		{printf("%4d: ",expr_count);}
+    : eval line			{printf("%4ld: ",expr_count);}
+    | /* empty */		{printf("%4ld: ",expr_count);}
     ;
 
 line
-    : assign '\n'		{ printf("%d\n", $1); }
+    : assign '\n'		{ printf("%ld\n", $1); }
     ;
 
 assign
-    : VAR '=' expr		{check_error ($3); set_val($1, $3); clear_vals();  $$ = eval($3); expr_count++;}
-    | expr			   {check_error($3); $$ = eval($1); expr_count++;}
+    : VAR '=' expr		{check_error ($3); clear_vals(); value = eval($3); set_val($1, value); $$ = value; expr_count++;}
+    | expr			   {check_error($1); $$ = eval($1); expr_count++;}
     | '\n'			   {yyerror("syntax error");return 1;}
     ;
 
@@ -71,7 +72,7 @@ term
 factor
     : '(' expr ')'		{$$ = $2;}
     | CONST         {$$ = make_const_node($1);}
-    | VAR			{ $$ = make_var_node(get_val($1)); }
+    | VAR			{ $$ = make_var_node($1);}
     | '-' factor    {$$ = make_unop_node($2,MINUS);}
     | '+' factor	{$$ = make_unop_node($2, PLUS);}  
     | '#' CONST     {check_range ($2); $$= get_expression($2); cache_flag = TRUE; cache_val = $2;} 
@@ -93,12 +94,12 @@ print_welcome()
 
 static int var_tab[26];
 
-int get_val(int v)
+long get_val(long v)
 {
     return var_tab[v - 'A'];
 }
 
-void set_val(int v, int val)
+void set_val(long v, long val)
 {
     var_tab[v - 'A'] = val;
 }
@@ -111,20 +112,23 @@ void clear_vals()
         mem_cache[i] = 0; 
     }   
 } 
-void check_range(long value)
+int check_range(long value)
 {
     if (value > expr_count)
     {
-        yyerror("Index %d is out of range", value);
+        fprintf(stderr, "Index %ld is out of range", value);
         return 1; 
-    }    
+    } 
+    return 0;  
 }
-void check_error(TN node)
+int check_error(TN node)
 {
     if (node == NULL)
     {
         yyerror("Node not found"); 
         return 1; 
-    }     
+    }
+
+    return 0;     
 }
 

@@ -1,39 +1,31 @@
 # Title: Makefile - simple expression eval
 # Christian Merchant
 # 03-06-15
-#
 
 CC = gcc
+
 CFLAGS = -g
+
 LIBS = -lfl
+
 YACC = bison
+
 LEX = flex
-OBJECTS = eval.o tree.o parse.o main.o lex.yy.o
+
+SOURCE = parse.y main.c lex.yy.c eval.c tree.c
+
+OBJECTS = parse.o main.o lex.yy.o eval.o tree.o 
 
 see: $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o see
 
-eval.o: eval.c tree.h eval.h defs.h  
-	$(CC) $(CFLAGS) eval.c 
-
-tree.o: tree.c tree.h defs.h
-	$(CC) $(CFLAGS) tree.c
-
-main.o:	main.c eval.h
-	$(CC) $(CFLAGS) main.c 
-
-lex.yy.o: lex.yy.c
-	$(CC) $(CFLAGS) lex.yy.c
-
-parse.o: parse.c
-	$(CC) $(CFLAGS) parse.c	
-
-y.tab.h parse.c: parse.y tree.h eval.h defs.h
+y.tab.h parse.c: parse.y
 	$(YACC) -y -d -t -v parse.y
 	mv y.tab.c parse.c
 
-lex.yy.c: scan.l tree.h eval.h defs.h y.tab.h 
-	$(LEX) scan.l	
+lex.yy.c: scan.l
+	$(LEX) scan.l
+
 
 clean:
 	-rm *.o lex.yy.c parse.c y.tab.h y.output see
