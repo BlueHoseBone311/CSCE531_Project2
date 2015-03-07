@@ -15,10 +15,11 @@ typedef int boolean;
 long * mem_cache;
 
 //expression counter, flag for setting whether # CONST has been see, and cache_val for storing the line number it references
-extern long expr_count;
-extern boolean cache_flag;
+long expr_count;
+boolean cache_flag;
+boolean memcache_flag; 
 long cache_val;
-extern int tab_size;   
+int tab_size;   
 
 //methods for getting value from var_tab and resizing expression array and mem_cache array
 void clear_vals();  

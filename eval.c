@@ -23,7 +23,7 @@ long eval (TN node)
     expr_tab[expr_count] = node;
     long calc = 0; 
 
-    if (cache_flag == FALSE || cache_val == 0 || mem_cache[cache_val] == 0 && node != NULL)
+    if (cache_flag == FALSE || cache_val == 0 || memcache_flag == TRUE)
     {
 		if (node->tag == UN_OP) //Unary operation case
 		{
@@ -58,18 +58,21 @@ long eval (TN node)
 		}
 	
     }
-    else if(cache_flag == TRUE && cache_val != 0 && mem_cache[cache_val] != 0 && node != NULL)
+    
+    else if(cache_flag == TRUE && cache_val != 0 && memcache_flag == FALSE)
     {
     	calc = mem_cache[cache_val];
-    	mem_cache[expr_count] = calc; 
     	cache_flag = FALSE; 
     	cache_val = 0;  
+    	memcache_flag = FALSE; 
     }
+    
     else
     {
     	fprintf(stderr, "%s\n", "Internal error: bad node"); 
     }	
 
+    mem_cache[expr_count] = calc; 
     return calc; 
 }
 
@@ -77,14 +80,45 @@ void chk_or_resize()
 {
 	if (expr_count>=tab_size)
     {
+    	int i; 
+    	int temp = tab_size; 
 		int tab_size = expr_count*2; 
-		expr_tab = (TN *) realloc(expr_tab, tab_size*sizeof(TN));
-		mem_cache = (long *) realloc (mem_cache, tab_size*sizeof(long));
+		TN * temp1;
+		long * temp2; 
+		temp1 = (TN *) malloc(tab_size*sizeof(TN));
+		temp2 = (long *) malloc (tab_size*sizeof(long));
+		if (!temp1 || ! temp2)
+		{
+			fprintf(stderr, "Table resizing failed");
+			exit(0);
+		}
+		for (i=1; i<temp; i++)
+		{
+			temp1[i] = expr_tab[i];
+			temp2[i] = mem_cache[i];
+		}
 		free(expr_tab); 
-		free(mem_cache); 
+		free(mem_cache); 	
+		expr_tab = temp1; 
+		mem_cache = temp2; 	
+		
     }	
-}   
-
+}  
+#ifdef LOOKUPFUNCT
+long lookup(TN tnode)
+{
+	long val = 0;
+	int i;  
+	for (i=0; i<tab_size; i++)
+	{
+		if (tnode == expr_tab[i])
+		{
+			val = mem_cache[i];
+		}	
+	}	
+	return val; 
+} 
+#endif
 
 
 

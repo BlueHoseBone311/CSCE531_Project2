@@ -12,6 +12,7 @@
 void init_tabs(); 
 long eval(TN node); 
 void chk_or_resize(); 
+long lookup (TN tnode); 
 
 #endif 
 

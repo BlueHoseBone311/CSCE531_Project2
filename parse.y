@@ -15,12 +15,13 @@
 #include "tree.h"
 #define YYDEBUG 1
 
-void check_range(long value); 
-void check_error(TN node);
+int check_range(long value); 
+int check_error(TN node);
 void set_val(long, long);
 
 long expr_count =1; 
 int cache_flag = FALSE;
+boolean memcache_flag = FALSE; 
 static long value = 0; 
 %}
 
@@ -51,7 +52,7 @@ line
     ;
 
 assign
-    : VAR '=' expr		{check_error ($3); clear_vals(); value = eval($3); set_val($1, value); $$ = value; expr_count++;}
+    : VAR '=' expr		{check_error ($3); clear_vals(); memcache_flag = TRUE; value = eval($3); set_val($1, value); $$ = value; expr_count++;}
     | expr			   {check_error($1); $$ = eval($1); expr_count++;}
     | '\n'			   {yyerror("syntax error");return 1;}
     ;
@@ -63,9 +64,9 @@ expr
     ;
 
 term
-    : term '*' factor		{ $$ = $$ = make_binop_node($1,$3,MULT); }
-    | term '/' factor		{ $$ = $$ = make_binop_node($1,$3,DIV); }
-    | term '%' factor		{ $$ = $$ = make_binop_node($1,$3,MOD); }
+    : term '*' factor		{ $$ = make_binop_node($1,$3,MULT); }
+    | term '/' factor		{ $$ = make_binop_node($1,$3,DIV); }
+    | term '%' factor		{ $$ = make_binop_node($1,$3,MOD); }
     | factor
     ;
 
@@ -75,7 +76,7 @@ factor
     | VAR			{ $$ = make_var_node($1);}
     | '-' factor    {$$ = make_unop_node($2,MINUS);}
     | '+' factor	{$$ = make_unop_node($2, PLUS);}  
-    | '#' CONST     {check_range ($2); $$= get_expression($2); cache_flag = TRUE; cache_val = $2;} 
+    | '#' CONST     {check_range($2); $$ = get_expression($2); cache_flag = TRUE; cache_val = $2;} 
     | '#' VAR       {yyerror("syntax error"); return 1;}
     ;
 
@@ -112,21 +113,23 @@ void clear_vals()
         mem_cache[i] = 0; 
     }   
 } 
-void check_range(long value)
+int check_range(long value)
 {
-    if (value > expr_count)
+    if (value > expr_count || value<=0)
     {
         fprintf(stderr, "Index %ld is out of range\n", value);
-        
-    } 
-    return 0;  
+        exit(0);   
+    }  
+    return 0; 
 }
 int check_error(TN node)
 {
     if (node == NULL)
     {
         yyerror("Node not found"); 
+        exit(0); 
          
-    }    
+    }  
+    return 0;   
 }
 
