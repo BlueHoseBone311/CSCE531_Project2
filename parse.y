@@ -15,8 +15,8 @@
 #include "tree.h"
 #define YYDEBUG 1
 
-int check_range(long value); 
-int check_error(TN node);
+void check_range(long value); 
+void check_error(TN node);
 void set_val(long, long);
 
 long expr_count =1; 
@@ -112,12 +112,12 @@ void clear_vals()
         mem_cache[i] = 0; 
     }   
 } 
-int check_range(long value)
+void check_range(long value)
 {
     if (value > expr_count)
     {
-        fprintf(stderr, "Index %ld is out of range", value);
-        return 1; 
+        fprintf(stderr, "Index %ld is out of range\n", value);
+        
     } 
     return 0;  
 }
@@ -126,9 +126,7 @@ int check_error(TN node)
     if (node == NULL)
     {
         yyerror("Node not found"); 
-        return 1; 
-    }
-
-    return 0;     
+         
+    }    
 }
 

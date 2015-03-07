@@ -16,7 +16,7 @@ TN make_binop_node(TN node1, TN node2, int tagtype)
 
 	if (!node)
 	{
-		yyerror("out of space");
+		yyerror("out of space\n");
 		exit(0);
 	}	
 	node->u.binop.tp = tagtype; 
@@ -31,7 +31,7 @@ TN make_unop_node(TN node1, int tagtype)
 
 	if (!node)
 	{
-		yyerror("out of space");
+		yyerror("out of space\n");
 		exit(0);
 	}	
 	node->u.unop.op = tagtype; 
@@ -45,7 +45,7 @@ TN make_const_node(long val)
 	node->tag = C; 
 	if (!node)
 	{
-		yyerror("out of space");
+		yyerror("out of space\n");
 		exit(0);
 	}	
 	node->u.int_const = val; 
@@ -58,7 +58,7 @@ TN make_var_node(char variable)
 	node->tag = V; 
 	if (!node)
 	{
-		yyerror("out of space");
+		yyerror("out of space\n");
 		exit(0);
 	}	
 	node->u.var = variable;

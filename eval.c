@@ -31,7 +31,7 @@ long eval (TN node)
 			{
 				case MINUS: calc = -eval(node->u.unop.operand); break;
 				case PLUS: calc = eval(node->u.unop.operand); break;
-				default: yyerror("error: bad node");
+				default: yyerror("error: bad node\n");
 			}
 		}
 
@@ -44,7 +44,7 @@ long eval (TN node)
 				case ADD: calc = eval(node->u.binop.left_operand) + eval(node->u.binop.right_operand); break;
 				case SUB: calc = eval(node->u.binop.left_operand) - eval(node->u.binop.right_operand); break;
 				case MOD: calc = eval(node->u.binop.left_operand) % eval(node->u.binop.right_operand); break;
-				default: fprintf(stderr, "error: bad node");
+				default: fprintf(stderr, "error: bad node\n");
 			}
 		}
 
@@ -67,7 +67,7 @@ long eval (TN node)
     }
     else
     {
-    	fprintf(stderr, "%s", "Internal error: bad node"); 
+    	fprintf(stderr, "%s\n", "Internal error: bad node"); 
     }	
 
     return calc; 
