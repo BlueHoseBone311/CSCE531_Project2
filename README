@@ -1,0 +1,7 @@
+I got parts 1-4 to work and a portion of part 5 and 6. Unfortuantely, 
+I found that, no matter what I tried, entering #val 
+only works part of the time and doesn't update properly after a 
+variable has been changed. Theoretically, the flags I implemented
+should be handling this problem. I noticed that, as an example, if 
+line 2 was 2+3-4, and I referenced it with #2 in a succeeding line,  
+the value returned would be 4 (the last value in the desired expression). 
